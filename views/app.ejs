@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= appName %> - App Distribution Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- <div class="mb-8">
+            <a href="/" class="text-blue-600 hover:text-blue-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.707 3.293a1 1 0 010 1.414L6.414 9H17a1 1 0 110 2H6.414l4.293 4.293a1 1 0 01-1.414 1.414l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Back to Apps
+            </a>
+        </div> -->
+
+        <h1 class="text-4xl font-bold text-gray-800 mb-8"><%= appName %></h1>
+
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6">Available Versions</h2>
+            <div class="space-y-4">
+                <% versions.forEach(version => { %>
+                    <div class="bg-gray-50 rounded-lg p-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-medium text-gray-800">Version <%= version.version %></h3>
+                            <p class="text-sm text-gray-600">Filename: <%= version.filename %></p>
+                        </div>
+                        <a href="/uploads/<%= version.filename %>" 
+                           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                            Download
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
