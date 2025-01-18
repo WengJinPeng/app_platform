@@ -11,22 +11,27 @@
         
         <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Upload New App</h2>
-            <form action="/upload" method="post" enctype="multipart/form-data" class="space-y-4">
-                <div class="flex items-center space-x-4">
-                    <input type="file" name="file" required 
-                           class="block w-full text-sm text-gray-500
-                                  file:mr-4 file:py-2 file:px-4
-                                  file:rounded-full file:border-0
-                                  file:text-sm file:font-semibold
-                                  file:bg-blue-50 file:text-blue-700
-                                  hover:file:bg-blue-100">
-                    <button type="submit" 
-                            class="bg-blue-600 text-white px-6 py-2 rounded-lg
-                                   hover:bg-blue-700 transition duration-200">
-                        Upload
-                    </button>
-                </div>
-            </form>
+            <input type="password" id="adminPassword" placeholder="Management Password" 
+                   class="border p-2 mb-4 block">
+            <div id="uploadPanel" style="display: none;">
+                <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" onsubmit="return doUpload();" class="space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <input type="file" name="file" required 
+                               class="block w-full text-sm text-gray-500
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-full file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-700
+                                      hover:file:bg-blue-100">
+                        <button type="submit" 
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg
+                                       hover:bg-blue-700 transition duration-200">
+                            Upload
+                        </button>
+                    </div>
+                    <progress id="uploadProgress" value="0" max="100" class="w-full mt-2"></progress>
+                </form>
+            </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-lg p-6">
@@ -45,5 +50,28 @@
             </div>
         </div>
     </div>
+    <script>
+    function doUpload() {
+        const form = document.getElementById('uploadForm');
+        const xhr = new XMLHttpRequest();
+        const progressBar = document.getElementById('uploadProgress');
+        xhr.upload.addEventListener('progress', e => {
+            if (e.lengthComputable) {
+                progressBar.value = (e.loaded / e.total) * 100;
+            }
+        });
+        xhr.open('POST', form.action + '?password=' + encodeURIComponent(document.getElementById('adminPassword').value));
+        xhr.send(new FormData(form));
+        xhr.onload = () => location.reload();
+        return false;
+    }
+    document.getElementById('adminPassword').addEventListener('input', function() {
+        if (this.value === '13579') {
+            document.getElementById('uploadPanel').style.display = 'block';
+        } else {
+            document.getElementById('uploadPanel').style.display = 'none';
+        }
+    });
+    </script>
 </body>
 </html>

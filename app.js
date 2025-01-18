@@ -71,8 +71,29 @@ app.get('/app/:name', (req, res) => {
     res.render('app', { appName, versions: files });
 });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', (req, res, next) => {
+    if (req.query.password !== '13579') {
+        return res.status(403).send('Incorrect password');
+    }
+    next();
+}, upload.single('file'), (req, res) => {
     res.redirect('/');
+});
+
+app.delete('/delete', (req, res) => {
+    const { file, password } = req.query;
+    console.log('Delete request for file:', file);
+    if (password !== '13579') {
+        return res.status(403).send('Incorrect password');
+    }
+    try {
+        fs.unlinkSync(path.join('uploads', file));
+        console.log('File successfully deleted:', file);
+        res.status(200).send('Deleted');
+    } catch (err) {
+        console.error('Error deleting file:', err);
+        res.status(500).send('Error deleting file');
+    }
 });
 
 app.listen(port, () => {

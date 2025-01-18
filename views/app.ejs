@@ -7,14 +7,14 @@
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8">
-        <!-- <div class="mb-8">
+        <div class="mb-8">
             <a href="/" class="text-blue-600 hover:text-blue-800 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.707 3.293a1 1 0 010 1.414L6.414 9H17a1 1 0 110 2H6.414l4.293 4.293a1 1 0 01-1.414 1.414l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
                 Back to Apps
             </a>
-        </div> -->
+        </div> 
 
         <h1 class="text-4xl font-bold text-gray-800 mb-8"><%= appName %></h1>
 
@@ -27,14 +27,32 @@
                             <h3 class="text-xl font-medium text-gray-800">Version <%= version.version %></h3>
                             <p class="text-sm text-gray-600">Filename: <%= version.filename %></p>
                         </div>
-                        <a href="/uploads/<%= version.filename %>" 
-                           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-                            Download
-                        </a>
+                        <div class="flex items-center space-x-2">
+                            <a href="/uploads/<%= version.filename %>" 
+                               class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                                Download
+                            </a>
+                            <button onclick="confirmDeletion('<%= version.filename %>')" 
+                                    class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 <% }) %>
             </div>
         </div>
     </div>
+    <script>
+        function confirmDeletion(filename) {
+            const pass = prompt('Enter management password:');
+            if (pass === '13579') {
+                fetch('/delete?file=' + encodeURIComponent(filename) + '&password=' + encodeURIComponent(pass), {
+                    method: 'DELETE'
+                }).then(() => location.reload());
+            } else {
+                alert('Incorrect password.');
+            }
+        }
+    </script>
 </body>
 </html>
